@@ -17,7 +17,8 @@ function BugsService($http) {
    * @returns {Promise}
    */
   function create(payload) {
-    // TODO - use POST to create new bug
+    return $http.post('http://localhost:3000/bugs', payload)
+      .then(response => response.data);
   }
 
   /**
@@ -27,8 +28,9 @@ function BugsService($http) {
    * @param id {Number}
    * @returns {Promise}
    */
-  function del(id) {
-    // TODO - use DELETE to remove a bug
+  function del (id) {
+    return $http.delete(`http://localhost:3000/bugs/${id}`)
+      .then(response => response.data);
   }
 
   /**
@@ -38,13 +40,8 @@ function BugsService($http) {
    * @returns {Promise}
    */
   function get() {
-    return $http({
-      url: 'http://localhost:3000/bugs',
-      method: 'GET',
-      dataType: 'json',
-    }).then((response) => {
-      return response.data;
-    });
+    return $http.get('http://localhost:3000/bugs')
+      .then(response => response.data);
   }
 
   /**
@@ -53,7 +50,8 @@ function BugsService($http) {
    * @returns {Promise}
    */
   function update(payload) {
-    // TODO - update single bug
+    return $http.put(`http://localhost:3000/bugs/${payload.id}`, payload)
+      .then(response => response.data);
   }
 
   return {
@@ -61,7 +59,7 @@ function BugsService($http) {
     delete: del,
     get: get,
     update: update
-  }
+  };
 }
 
 export default BugsService;

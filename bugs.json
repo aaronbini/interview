@@ -114,13 +114,6 @@
     },
     {
       "userId": 1,
-      "id": 17,
-      "description": "Work on question board bug",
-      "points": 16,
-      "completed": false
-    },
-    {
-      "userId": 1,
       "id": 18,
       "description": "Consolidate card components",
       "points": 4,
@@ -138,7 +131,14 @@
       "id": 20,
       "description": "Buy new headphones",
       "points": 2,
-      "completed": false
+      "completed": true
+    },
+    {
+      "userId": 1,
+      "description": "do the todos that need todo-ing",
+      "points": 1,
+      "completed": false,
+      "id": 21
     }
   ]
 }

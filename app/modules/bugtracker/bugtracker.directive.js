@@ -1,3 +1,4 @@
+
 function bugtracker(BugsService) {
   return {
     controller: BugTrackerController,
@@ -20,6 +21,7 @@ function bugtracker(BugsService) {
 
     // default radio selection
     $scope.completedFilter = 'all';
+    $scope.errorMessage;
 
     // set up a clean form
     function initForm() {
@@ -28,7 +30,7 @@ function bugtracker(BugsService) {
         description: '',
         points: '1',
         completed: false
-      }
+      };
     }
 
     initForm();
@@ -44,7 +46,8 @@ function bugtracker(BugsService) {
       BugsService.get()
         .then((data) => {
           _bugs = data;
-        });
+        })
+        .catch(err => $scope.errorMessage = err.message || 'error with request');
     }
 
     /**
@@ -57,7 +60,12 @@ function bugtracker(BugsService) {
      * @param data {object} - the bug to be created (object)
      */
     $scope.addNewBug = function(data) {
-      // TODO - create new bug entry.
+      BugsService.create(data)
+        .then(data => {
+          _bugs.push(data);
+          initForm();
+        })
+        .catch(err => $scope.errorMessage = err.message || 'error with request');
     };
 
     /**
@@ -68,7 +76,11 @@ function bugtracker(BugsService) {
      * @param data {object} - the bug (object) to be deleted
      */
     $scope.deleteBug = function(data) {
-      // TODO - delete the bug
+      BugsService.delete(data.id)
+        .then(() => {
+          loadList();
+        })
+        .catch(err => $scope.errorMessage = err.message || 'error with request');
     };
 
     /**
@@ -78,7 +90,12 @@ function bugtracker(BugsService) {
      * @param data {object}
      */
     $scope.updateBug = function(data) {
-      // TODO - update bug
+      BugsService.update(data)
+        .then(updated => {
+          if (!updated) throw {message: 'error updating bug'};
+        })
+        .catch(err => $scope.errorMessage = err.message || 'error with request');
+
     };
 
     // ---------------------------------------------
@@ -95,7 +112,11 @@ function bugtracker(BugsService) {
      * ex: return an array of bugs that match the appropriate status
      */
     $scope.filteredList = function(completedFilter) {
-      // TODO - use filter prototype to return array of bugs that match the radio selection
+      if (completedFilter === 'all') {
+        return _bugs;
+      } else {
+        return _bugs.filter(e => e.completed.toString() === completedFilter);
+      }
     };
 
     /**
@@ -109,7 +130,14 @@ function bugtracker(BugsService) {
      * ex: show me the sum of all the 4 point bugs that are marked "done".
      */
     $scope.getSum = function(pointValue, completedFilter) {
-      // TODO - use array reducer to calculate totals of each point value
+      if (completedFilter === 'all') {
+        return _bugs.filter(e => e.points === pointValue)
+                    .reduce((prev, curr) => prev + curr.points, 0);
+      } else {
+        return _bugs.filter(e => e.completed.toString() === completedFilter)
+                    .filter(e => e.points === pointValue)
+                    .reduce((prev, curr) => prev + curr.points, 0);
+      }
     };
 
     /**
@@ -123,7 +151,12 @@ function bugtracker(BugsService) {
      * ex: show me the number of 4 point bugs that are marked "done".
      */
     $scope.getTotal = function(pointValue, completedFilter) {
-      // TODO - use array filter to calculate totals of each point value
+      if (completedFilter === 'all') {
+        return _bugs.filter(e => e.points === pointValue).length;
+      } else {
+        return _bugs.filter(e => e.completed.toString() === completedFilter)
+                    .filter(e => e.points === pointValue).length;
+      }
     };
 
   }

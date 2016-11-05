@@ -10,10 +10,10 @@ angular.module('myApp', [
   'myApp.bugtracker'
 ])
   .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
-      $locationProvider.hashPrefix('!');
-      $routeProvider.otherwise({redirectTo: '/'});
+    $locationProvider.hashPrefix('!');
+    $routeProvider.otherwise({redirectTo: '/'});
 
-      $routeProvider.when('/', {
-        template: '<bugtracker></bugtracker>',
-      });
-    }]);
+    $routeProvider.when('/', {
+      template: '<bugtracker></bugtracker>',
+    });
+  }]);

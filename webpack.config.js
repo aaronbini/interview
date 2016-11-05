@@ -1,6 +1,6 @@
 module.exports = {
   devServer: {
-    contentBase: "./app",
+    contentBase: './app',
     hot: true
   },
   entry: {
